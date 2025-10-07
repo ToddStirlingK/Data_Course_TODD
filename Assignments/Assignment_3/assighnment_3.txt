@@ -20,7 +20,7 @@
 
 seq(2,150,2) # here's the code to get a list of the even numbers between 2 and 150
 
-setwd('/Users/frog/Desktop/Data_Course_TODD/Data')
+setwd('../../Data')
 
 View(iris)
 
@@ -69,12 +69,5 @@ view(big_area_iris)
 # 6.  Upload the last numbered section of this R script (with all answers filled in and tasks completed) 
       # to canvas
       # I should be able to run your R script and get all the right objects generated
-
-
-
-
-
-
-
 
 

@@ -1,4 +1,6 @@
-setwd("/Users/frog/Desktop/Data_Course_TODD/Data")
+
+setwd('../../Data')
+
 
 #4
 
@@ -38,3 +40,4 @@ for (i in csv_files) {
   first_line = readLines(i, n = 1)
   print(first_line)
 }
+

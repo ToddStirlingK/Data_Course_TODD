@@ -1,0 +1,52 @@
+
+setwd('../../Data')
+
+
+#4
+
+csv_files = list.files(pattern = "\\.csv$")
+
+#5
+
+length(csv_files)
+
+#6
+
+df = read.csv('wingspan_vs_mass.csv')
+
+#7
+
+head(df, n = 5L)
+
+?head
+
+#8
+
+list.files(pattern = '^b', recursive = TRUE)
+
+#9
+
+files_b = list.files(pattern = '^b', recursive = TRUE)
+
+for (f in files_b) {
+  first_line = readLines(f, n = 1)
+  print(first_line)
+}
+
+
+#10
+
+for (i in csv_files) {
+  first_line = readLines(i, n = 1)
+  print(first_line)
+}
+
+
+
+
+
+
+
+
+
+

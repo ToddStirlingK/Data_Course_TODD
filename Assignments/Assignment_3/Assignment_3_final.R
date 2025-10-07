@@ -20,7 +20,7 @@
 
 seq(2,150,2) # here's the code to get a list of the even numbers between 2 and 150
 
-setwd('/Users/frog/Desktop/Data_Course_TODD/Data')
+setwd('../../Data')
 
 View(iris)
 
