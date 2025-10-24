@@ -1,0 +1,31 @@
+#Final Project Idea:
+  
+#I plan to analyze the data collected by Guilin Wu et al. about the 
+#atmospheric Nitrogen accumulation on the canopies of subtropical forests 
+#and how it affects their photosynthetic rates compared to Nitrogen 
+#accumulation in the understory of these forests. 
+
+#The data will be taken from the study entitled: "Canopy nitrogen addition 
+#enhance the photosynthetic rate of canopy species by improving leaf 
+#hydraulic conductivity in a subtropical forest". The data records 
+#photosynthetic rates along with leaf thickness, and leaf hydraulic 
+#conductivity of three different species of trees in three different areas, 
+#both in the understory and on the canopy. 
+
+# Graph of Data
+
+setwd("Assignments/Assignment_4")
+
+library(readxl)
+
+nitro = read_xls('Table_1_Canopy nitrogen Data.xls')
+
+View(nitro)
+
+nitro %>% 
+  group_by(Species) %>% 
+  summarise(mean_ph = mean(`An (mmol.m-2.s-1)`)) %>% 
+  ggplot(aes(x = Species,
+             y = mean_ph,
+             fill = Species)) +
+  geom_col()
