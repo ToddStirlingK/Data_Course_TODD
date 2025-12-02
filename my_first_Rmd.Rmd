@@ -1,0 +1,65 @@
+---
+title: "my first R markdown"
+output: html_document
+date: "2025-11-18"
+---
+
+```{r load libraries, include=FALSE}
+
+library(tidyverse)
+library(palmerpenguins)
+library(ggplot2)
+
+
+```
+
+```{r include=FALSE}
+peng = penguins
+
+peng_2 = peng %>% 
+  mutate(gentoo = case_when(species == 'Gentoo' ~ TRUE,
+                            TRUE ~ FALSE))
+
+mod4 = glm(dat = peng_2, formula = gentoo ~ body_mass_g, 
+           family = "binomial")
+
+peng_2$pred2 = predict(mod4, peng_2, type = 'response')
+
+peng_2 %>% 
+  mutate(outcome = case_when(pred2 > 0.75 ~ 'Gentoo',
+                             pred2 < 0.25 ~ 'Not Gentoo',
+                             TRUE ~ 'Not Sure'))
+
+peng_2 = peng_2 %>% 
+  mutate(outcome = case_when(pred2 > 0.75 ~ 'Gentoo',
+                             pred2 < 0.25 ~ 'Not Gentoo',
+                             TRUE ~ 'Not Sure')) %>% 
+  mutate(compare = case_when(species == 'Gentoo' & outcome == 'Gentoo' ~ 'Correct',
+                             species != 'Gentoo' & outcome == 'Not Gentoo' ~ 'Correct',
+                             TRUE ~ 'Not correct'))
+
+
+```
+
+
+#DID I DO IT? 
+
+```{r echo=FALSE, warning=FALSE}
+peng_2 %>% 
+  ggplot(aes(x = body_mass_g, 
+             y = pred2, 
+             colour = species)) +
+  geom_point()
+```
+
+
+![fig.1](https://platform.vox.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/15231691/453801468.0.0.1421786380.jpg?quality=90&strip=all&crop=16.73,0,66.54,100)
+[link](https://chatgpt.com)
+
+
+
+
+
+
+
+
