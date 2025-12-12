@@ -1,0 +1,136 @@
+---
+title: "TODD_Skills_Test_3"
+output: html_document
+date: "2025-12-12"
+---
+### Library
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(broom)
+```
+
+## Faculty Saleries
+
+This is an anylization of the 'FacultySalaries_1995.csv' dataset.
+
+### Cleaned data
+
+to clean this data it needed to be pivited longer. This was done by first renaming the columns like 'AvgFullProfSalary' to simply 'Full' for the three ranks. This was then pivited longer so the ranks were in a column named 'Rank' with their saleries in a column named 'Salary'.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+fac = read.csv('FacultySalaries_1995.csv')
+
+fac_name = fac %>% 
+  rename(Full = AvgFullProfSalary,
+         Assoc = AvgAssocProfSalary,
+         Assist = AvgAssistProfSalary)
+
+fac_long = fac_name %>% 
+  pivot_longer(cols = c(Full, Assoc, Assist),
+               names_to = "Rank",
+               values_to = "Salary")
+```
+
+### Copied graph
+
+Becasue this data was cleaned in this way it made it possible for the Salaries to be a consistent Y variable for all the ranks and be graphed like so:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+fac_long %>% 
+  filter(Tier != 'VIIB') %>% 
+  ggplot(aes(x = Rank,
+             y = Salary,
+             fill = Rank)) +
+  geom_boxplot() +
+  facet_wrap(~ Tier) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+
+```
+
+### ANOVA model
+
+This is an ANOVA model displaying the influences the state tier and rank had on professors salary. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+mod = lm(data = fac_long,
+         Salary ~ State + Tier + Rank)
+
+summary(mod)
+```
+
+## Esencial oils and time
+
+This ia an analyzation of the data set 'Juniper_Oils.csv'. 
+
+### Cleaned data
+
+To clean this data the many different columns of chemicals and their concentrations needed to be pivoted longer. The chemical names are in a column named 'ChemicalID' and the concentrations are in a column named 'Concentrations'. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+jun = read.csv('Juniper_Oils.csv')
+
+jun_long = jun %>% 
+  pivot_longer(cols = c("alpha.pinene","para.cymene","alpha.terpineol",
+                        "cedr.9.ene","alpha.cedrene","beta.cedrene",
+                        "cis.thujopsene","alpha.himachalene","beta.chamigrene",
+                        "cuparene","compound.1","alpha.chamigrene","widdrol",
+                        "cedrol","beta.acorenol","alpha.acorenol",
+                        "gamma.eudesmol","beta.eudesmol","alpha.eudesmol",
+                        "cedr.8.en.13.ol","cedr.8.en.15.ol","compound.2",
+                        "thujopsenal"),
+               names_to = 'ChemicalID',
+               values_to = 'Concentration')
+
+```
+
+### Comparison of chemicals
+
+This is a comparison of the effect that time has on decomposing chemicals in a juniper after a fire. You can compare each chemical to one another because this graph is facet warped by chemical ID. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+jun_long %>% 
+  ggplot(aes(x = YearsSinceBurn,
+             y = Concentration)) +
+  geom_smooth() +
+  facet_wrap(~ ChemicalID, scales = "free_y")
+
+```
+
+### Tidy table
+
+This is a table showing the statistical significance that time after fire had on each chemical in a juniper. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+mod2 = jun_long %>% 
+  group_by(ChemicalID) %>% 
+  do(tidy(glm(Concentration ~ YearsSinceBurn, data = ., family = gaussian()))) %>%
+  ungroup()
+
+mod3 = mod2 %>% 
+  filter(term == "YearsSinceBurn")
+
+mod3
+```
+
+### Significant tidy table
+
+This table shows only the chemicals that were effected significantly by time after fire. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+sig_mod = mod3 %>% 
+  filter(p.value < 0.05)
+
+sig_mod
+
+```
+
+
+
+
+
+
+
+
+
