@@ -1,0 +1,29 @@
+1. Are any of your predicted response values from your best model scientifically meaningless? Explain.
+
+Yes, the prediction says that at a light value of 200, the growth rate will be 1200. This is probably not going to be the case. There is a point in
+fungal growth at which light will no longer help its growth, and the rate will taper off. There is potential that at a certain point the light may 
+slow its rate. 
+
+2. In your plots, did you find any non-linear relationships? Do a bit of research online and give a link to at least one resource explaining how 
+to deal with modeling non-linear relationships in R.
+
+https://www.geeksforgeeks.org/r-language/non-linear-regressions-with-caret-package-in-r/
+
+3. Write the code you would use to model the data found in “/Data/non_linear_relationship.csv” with a linear model (there are a few ways of doing 
+this)
+
+library(caret)
+
+non = read.csv(“/Data/non_linear_relationship.csv”)
+
+mod = glm(data = non,
+            formula = Predictor ~ Response)
+
+fit = train(Predictor ~ Response,
+  data = mus,
+  method = mod,
+  trControl = trainControl(method = "cv", number = 10))
+
+
+
+

@@ -1,0 +1,115 @@
+---
+title: "assighnment_9"
+output: html_document
+date: "2025-12-12"
+---
+
+In this document I will be evaluating the most accurate determiner of 
+admission into graduate school from three factors:
+
+Student GRE
+
+Student GPA
+
+Education Institution rank (1 = highest, 4 = lowest)
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(easystats)
+library(MASS)
+
+
+grad = read.csv('../../Data/GradSchool_Admissions.csv')
+
+```
+
+This is an initial observation between the three influences of admissions and weather the student was admitted or not (1 = admitted, 0 = not admitted). These are jitter plots so it is possible to see each individual point without them overlapping. The regression line measures the trend of admission vs non admission as the variable increases. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+plot_1 = grad %>% 
+  ggplot(aes(x = gre,
+             y = admit)) +
+  geom_jitter(height = 0.05) +
+  stat_smooth(method = "glm",
+              method.args = list(family = "binomial"),
+              se = TRUE) + 
+  scale_y_continuous(limits = c(0, 1)) +
+  theme(axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        axis.text.y = element_text(size = 16),
+        axis.text.x = element_text(size = 16))
+
+plot_2 = grad %>% 
+  ggplot(aes(x = gpa,
+             y = admit)) +
+  geom_jitter(height = 0.05) +
+  stat_smooth(method = "glm",
+              method.args = list(family = "binomial"),
+              se = TRUE) + 
+  scale_y_continuous(limits = c(0, 1)) +
+  theme(axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.text.x = element_text(size = 16))
+
+plot_3 = grad %>% 
+  ggplot(aes(x = rank,
+             y = admit)) +
+  geom_jitter(height = 0.05) +
+  stat_smooth(method = "glm",
+              method.args = list(family = "binomial"),
+              se = TRUE) + 
+  scale_y_continuous(limits = c(0, 1)) +
+  scale_x_reverse() +
+  theme(axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.text.x = element_text(size = 16))
+
+
+```
+
+```{r echo=FALSE, fig.show="hold", message=FALSE, warning=FALSE, out.width="32%"}
+plot(plot_1)
+plot(plot_2)
+plot(plot_3)
+
+
+```
+
+As we see from these graphs the trend lines tell similar stories. Admissions are generaly low, but as each variable increases so do admissions to about half being admitted at the highest GRE, GPA, and rank. Though it seems that rank has the highest amount of admissions when you get to the best value (IE. 1). Bus all standard diviation seems to be similar.  
+
+
+From here we can make models based on how each of these variables effect weather a student will be admitted or not and then compare each of them together to see which is best overall in accuracy, least diviance, predictability, ect. (mod_1 = GRE, mod_2 = GPA, mod_3 = rank)
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+mod_1 = glm(data = grad,
+            formula = admit ~ gre)
+
+mod_2 = glm(data = grad,
+            formula = admit ~ gpa)
+
+mod_3 = glm(data = grad,
+            formula = admit ~ rank)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+compare_performance(mod_1, mod_2, mod_3) %>% plot()
+
+
+```
+
+As we can see mod_3 (rank) is the best model for predicting weather a student will get into graduate school or not. It is most accurate on all accounts of statistical significance and prediction. This may be due to higher level institutions students having better GRE or GPA scores in general which would mean the comparison between the three is skewed. This would be a good topic to explore further in another project, but from direct comparison between GRE, GPA, and school rank, school rank is the best predictor if a student will get into graduate school or not.  
+
+
+
+
+
+
